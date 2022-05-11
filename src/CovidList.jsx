@@ -45,13 +45,15 @@ export const CovidList = () => {
   return (
     <MainContainer>
       <form>
-        <StyledSelect onClick={(e) => fetchDataHandler(e.target.value)} >
+        <StyledSelect onClick={(e) => fetchDataHandler(e.target.value)} defaultValue="Kyrgyzstan" >
           <option>{selectedCountry[0]?.Country || 'Select country'}</option>
           {allCountries.map((country) => (
-            <option key={country.Slug} value={country.Country}>
+            <option key={country.Slug} value={country.Country} selected="Kyrgyzstan">
               {country.Country}
             </option>
+           
           ))}
+          
         </StyledSelect>
         <div>
           {isLoading ? (

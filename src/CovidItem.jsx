@@ -13,6 +13,9 @@ export const CovidItem = () => {
   const newActive = selectedCountry[4]?.Confirmed - selectedCountry[3]?.Confirmed;
   console.log(newActive, "New Active");
   console.log(maxRecoveries);
+  
+  const day = new Date(maxRecoveries.Date).toLocaleString('en-Us', {day: '2-digit'}) ;
+  const month = new Date(maxRecoveries.Date).toLocaleString('en-US', {month: 'long'}) ;
   return (
     <StyledSection>
       <div>
@@ -50,7 +53,8 @@ export const CovidItem = () => {
 
       <RecoveredContainer>
         <p>Top recovered cases</p>
-        <b>{maxRecoveries.Recovered}</b>
+        <b>{maxRecoveries.Recovered}</b> <br />
+        <span>{day}</span> <span>{month}</span>
         <p>New cases of COVID19</p>
         <b>{newActive}</b>
       </RecoveredContainer>
@@ -71,7 +75,7 @@ const RecoveredContainer = styled.div`
   background: #1bbc9b;
   border-radius: 5px;
   margin: 1rem;
-  p {
+  p, span {
     font-family: "Roboto";
     font-style: normal;
     font-weight: 500;
