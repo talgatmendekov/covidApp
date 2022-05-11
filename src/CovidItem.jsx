@@ -55,6 +55,7 @@ export const CovidItem = () => {
         <p>Top recovered cases</p>
         <b>{maxRecoveries.Recovered}</b> <br />
         <span>{day}</span> <span>{month}</span>
+        <hr/>
         <p>New cases of COVID19</p>
         <b>{newActive}</b>
       </RecoveredContainer>
