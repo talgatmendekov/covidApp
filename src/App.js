@@ -3,8 +3,11 @@ import "./App.css";
 import { CovidList } from "./CovidList";
 import { Spinner } from "./components/UI/Spinner/Spinner";
 import { setToLocalStorage } from "./utils/helpers/localStorage";
+import { useDispatch } from "react-redux";
+import { statActions } from "./store/statSlice";
 
 function App() {
+  const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -22,12 +25,14 @@ function App() {
 
        
         setToLocalStorage('allCounties', countriesData)
+        dispatch(statActions.getAllCountries(countriesData))
+      
       };
       fetchData();
     } catch (error) {
       setError(error.message);
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="App">

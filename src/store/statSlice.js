@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getFromLocalStorage } from "../utils/helpers/localStorage";
 
 const initState = {
-    allCountries: getFromLocalStorage('allCounties') || [],
+    allCountries: getFromLocalStorage('allCountries') || [],
     selectedCountry: getFromLocalStorage('selectedCountry') || [],
 }
 
@@ -11,7 +11,13 @@ const statSlice = createSlice({
     initialState: initState,
 
     reducers: {
-
+        getAllCountries: (state, action) => {
+            state.allCountries = action.payload
+        },
+        showSelectedCountry: (state, action) => {
+            state.selectedCountry = action.payload
+        }
+        
     }
 
 })

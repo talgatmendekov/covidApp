@@ -3,13 +3,18 @@ import { Spinner } from "./components/UI/Spinner/Spinner";
 import { CovidItem } from "./CovidItem";
 import styled from "styled-components";
 import { setToLocalStorage } from "./utils/helpers/localStorage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { statActions } from "./store/statSlice";
 
 
 export const CovidList = () => {
+  const dispatch = useDispatch()
   const {allCountries} = useSelector(state => state.stat)
+  const {selectedCountry} = useSelector(state => state.stat)
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+
 
   const fetchDataHandler = (country) => {
     setIsLoading(true);
@@ -17,7 +22,7 @@ export const CovidList = () => {
     try {
       const fetchSelectedCountryData = async () => {
         const response = await fetch(
-          `https://api.covid19api.com/total/dayone/country/${country}`
+          `https://api.covid19api.com/total/dayone/country/${country}?limit=5`
         );
         if (response.ok) {
           setIsLoading(false);
@@ -25,7 +30,9 @@ export const CovidList = () => {
           throw new Error("Something went wrong");
         }
         const selectedCountryData = await response.json();
-        setToLocalStorage('selectedCountry',selectedCountryData);
+        const lastFiveDays = selectedCountryData.slice(-5)
+        setToLocalStorage('selectedCountry',lastFiveDays);
+        dispatch(statActions.showSelectedCountry(lastFiveDays))
       };
       fetchSelectedCountryData();
       
@@ -33,10 +40,13 @@ export const CovidList = () => {
       setError(error.message);
     }
   };
+
+  
   return (
-    <div>
+    <MainContainer>
       <form>
-        <StyledSelect onClick={(e) => fetchDataHandler(e.target.value)}>
+        <StyledSelect onClick={(e) => fetchDataHandler(e.target.value)} >
+          <option>{selectedCountry[0]?.Country || 'Select country'}</option>
           {allCountries.map((country) => (
             <option key={country.Slug} value={country.Country}>
               {country.Country}
@@ -52,10 +62,14 @@ export const CovidList = () => {
           {error}
         </div>
       </form>
-    </div>
+    </MainContainer>
   );
 };
 
+const MainContainer = styled.div`
+  width: 1400px;
+  margin: 0 auto;
+`
 const StyledSelect = styled.select`
   width: 360px;
   height: 61px;
