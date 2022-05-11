@@ -99,13 +99,13 @@ const StyledDate = styled.td`
 
 const TableColumn = styled.div`
   background: #edf7ff;
-  height: 2em;
-  width: 2rem;
+  height: inherit;
+  width: inherit;
   text-align: center;
   font-weight: 700;
   border-radius: 5px;
-  padding: 0;
-  margin: 0;
+  padding: 0.5rem;
+  margin: 0.5rem;
 `;
 const StyledTable = styled.table`
   width: 800px;
