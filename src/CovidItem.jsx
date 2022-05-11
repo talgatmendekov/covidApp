@@ -1,11 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-export const CovidItem = ({ selected }) => {
-  console.log(selected);
+export const CovidItem = () => {
+  const {selectedCountry} = useSelector(state => state.stat)
+  console.log(selectedCountry)
   return (
     <StyledSection>
-      {selected.map((country) => (
+      {selectedCountry.map((country) => (
         <StyledTable>
           <tbody>
             <tr>

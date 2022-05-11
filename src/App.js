@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { CovidList } from "./CovidList";
 import { Spinner } from "./components/UI/Spinner/Spinner";
+import { setToLocalStorage } from "./utils/helpers/localStorage";
 
 function App() {
-  const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -20,17 +20,18 @@ function App() {
         }
         const countriesData = await response.json();
 
-        setCountries(countriesData);
+       
+        setToLocalStorage('allCounties', countriesData)
       };
       fetchData();
     } catch (error) {
       setError(error.message);
     }
   }, [])
-  
+
   return (
     <div className="App">
-      {isLoading ? <Spinner /> : <CovidList countries={countries} />}
+      {isLoading ? <Spinner /> : <CovidList/>}
       {error}
       Test
     </div>

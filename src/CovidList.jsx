@@ -3,9 +3,11 @@ import { Spinner } from "./components/UI/Spinner/Spinner";
 import { CovidItem } from "./CovidItem";
 import styled from "styled-components";
 import { setToLocalStorage } from "./utils/helpers/localStorage";
+import { useSelector } from "react-redux";
 
-export const CovidList = ({ countries }) => {
-  const [selectedCountryData, setSelectedCountryData] = useState([]);
+
+export const CovidList = () => {
+  const {allCountries} = useSelector(state => state.stat)
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -23,11 +25,10 @@ export const CovidList = ({ countries }) => {
           throw new Error("Something went wrong");
         }
         const selectedCountryData = await response.json();
-        console.log(selectedCountryData);
-        setSelectedCountryData(selectedCountryData);
+        setToLocalStorage('selectedCountry',selectedCountryData);
       };
       fetchSelectedCountryData();
-      setToLocalStorage(selectedCountryData);
+      
     } catch (error) {
       setError(error.message);
     }
@@ -36,7 +37,7 @@ export const CovidList = ({ countries }) => {
     <div>
       <form>
         <StyledSelect onClick={(e) => fetchDataHandler(e.target.value)}>
-          {countries.map((country) => (
+          {allCountries.map((country) => (
             <option key={country.Slug} value={country.Country}>
               {country.Country}
             </option>
@@ -46,7 +47,7 @@ export const CovidList = ({ countries }) => {
           {isLoading ? (
             <Spinner />
           ) : (
-            <CovidItem selected={selectedCountryData} />
+            <CovidItem  />
           )}
           {error}
         </div>
