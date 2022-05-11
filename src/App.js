@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { CovidList } from "./CovidList";
+import { Spinner } from "./components/UI/Spinner/Spinner";
 
 function App() {
+  const [countries, setCountries] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    try {
+      const fetchData = async () => {
+        const response = await fetch("https://api.covid19api.com/countries");
+        if (response.ok) {
+          setIsLoading(false);
+        } else {
+          throw new Error("Something went wrong");
+        }
+        const countriesData = await response.json();
+
+        setCountries(countriesData);
+      };
+      fetchData();
+    } catch (error) {
+      setError(error.message);
+    }
+  }, [])
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isLoading ? <Spinner /> : <CovidList countries={countries} />}
+      {error}
+      Test
     </div>
   );
 }
