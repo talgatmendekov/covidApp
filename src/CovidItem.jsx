@@ -23,7 +23,9 @@ export const CovidItem = () => {
           <StyledTable>
             <tbody>
               <tr>
-                <StyledDate>{new Date(country.Date).toDateString()}</StyledDate>
+                <StyledDate>{new Date(country.Date).toLocaleString('en-Us', {day: '2-digit'})} {'  '}
+                {new Date(country.Date).toLocaleString('en-Us', {month: 'long'})}
+                </StyledDate>
                 <td>Active</td>
                 <td>
                   <TableColumn>{country.Active}</TableColumn>
@@ -96,7 +98,7 @@ const RecoveredContainer = styled.div`
 const StyledDate = styled.td`
   font-family: "Roboto";
   font-style: normal;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 22px;
   line-height: 26px;
   padding: 2rem;
