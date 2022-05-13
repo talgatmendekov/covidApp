@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { CovidList } from "./CovidList";
+import { CountrySelect } from "./CountrySelect";
 import { Spinner } from "./components/UI/Spinner/Spinner";
 import { setToLocalStorage } from "./utils/helpers/localStorage";
 import { useDispatch } from "react-redux";
 import { statActions } from "./store/statSlice";
+import { API_ALL_COUNTRIES } from "./utils/constants/general";
 
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -15,7 +16,7 @@ function App() {
     setIsLoading(true);
     try {
       const fetchData = async () => {
-        const response = await fetch("https://api.covid19api.com/countries");
+        const response = await fetch(API_ALL_COUNTRIES);
         if (response.ok) {
           setIsLoading(false);
         } else {
@@ -23,20 +24,18 @@ function App() {
         }
         const countriesData = await response.json();
 
-       
-        setToLocalStorage('allCounties', countriesData)
-        dispatch(statActions.getAllCountries(countriesData))
-      
+        setToLocalStorage("allCounties", countriesData);
+        dispatch(statActions.getAllCountries(countriesData));
       };
       fetchData();
     } catch (error) {
       setError(error.message);
     }
-  }, [dispatch])
+  }, [dispatch]);
 
   return (
     <div className="App">
-      {isLoading ? <Spinner /> : <CovidList/>}
+      {isLoading ? <Spinner /> : <CountrySelect />}
       {error}
     </div>
   );

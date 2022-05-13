@@ -1,100 +1,43 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import styled from "styled-components";
+import React from 'react'
+import styled from 'styled-components'
 
-export const CovidItem = () => {
-  const { selectedCountry } = useSelector((state) => state.stat);
-
-  const maxRecoveries =
-    selectedCountry.length !== 0 &&
-    selectedCountry.reduce((acc, curr) =>
-      acc.Recovered > curr.Recovered ? acc : curr
-    );
-  const newActive = selectedCountry[4]?.Confirmed - selectedCountry[3]?.Confirmed;
-  console.log(newActive, "New Active");
-  console.log(maxRecoveries);
-  
-  const day = new Date(maxRecoveries.Date).toLocaleString('en-Us', {day: '2-digit'}) ;
-  const month = new Date(maxRecoveries.Date).toLocaleString('en-US', {month: 'long'}) ;
+export const CovidItem = (props) => {
   return (
-    <StyledSection>
-      <div>
-        {selectedCountry.map((country) => (
-          <StyledTable>
+    <div>
+         <StyledTable>
             <tbody>
               <tr>
-                <StyledDate>{new Date(country.Date).toLocaleString('en-Us', {day: '2-digit'})} {'  '}
-                {new Date(country.Date).toLocaleString('en-Us', {month: 'long'})}
+                <StyledDate>{new Date(props.date).toLocaleString('en-Us', {day: '2-digit'})} {'  '}
+                {new Date(props.date).toLocaleString('en-Us', {month: 'long'})}
                 </StyledDate>
                 <td>Active</td>
                 <td>
-                  <TableColumn>{country.Active}</TableColumn>
+                  <TableColumn>{props.active}</TableColumn>
                 </td>
 
                 <td>Deaths</td>
                 <td>
-                  <TableColumn>{country.Deaths}</TableColumn>
+                  <TableColumn>{props.deaths}</TableColumn>
                 </td>
               </tr>
               <tr>
                 <td></td>
                 <td>Confirmed</td>
                 <td>
-                  <TableColumn>{country.Confirmed}</TableColumn>
+                  <TableColumn>{props.confirmed}</TableColumn>
                 </td>
 
                 <td>Recovered</td>
                 <td>
-                  <TableColumn>{country.Recovered}</TableColumn>
+                  <TableColumn>{props.recovered}</TableColumn>
                 </td>
               </tr>
             </tbody>
           </StyledTable>
-        ))}
-      </div>
+    </div>
+  )
+}
 
-      <RecoveredContainer>
-        <p>Top recovered cases</p>
-        <b>{maxRecoveries.Recovered}</b> <br />
-        <span>{day}</span> <span>{month}</span>
-        <hr/>
-        <p>New cases of COVID19</p>
-        <b>{newActive}</b>
-      </RecoveredContainer>
-    </StyledSection>
-  );
-};
-
-const StyledSection = styled.section`
-  width: 100%;
-  margin: 2rem auto;
-  display: flex;
-  gap: 1rem;
-`;
-
-const RecoveredContainer = styled.div`
-  width: 380px;
-  height: 450px;
-  background: #1bbc9b;
-  border-radius: 5px;
-  margin: 1rem;
-  p, span {
-    font-family: "Roboto";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 33px;
-    color: #ffffff;
-  }
-  b {
-    font-family: "Roboto";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 100px;
-    line-height: 117px;
-    color: #ffffff;
-  }
-`;
 const StyledDate = styled.td`
   font-family: "Roboto";
   font-style: normal;
@@ -123,3 +66,4 @@ const StyledTable = styled.table`
   text-align: left;
   border-collapse: collapse;
 `;
+

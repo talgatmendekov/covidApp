@@ -1,83 +1,70 @@
-import React, { useState } from "react";
-import { Spinner } from "./components/UI/Spinner/Spinner";
-import { CovidItem } from "./CovidItem";
+import React from "react";
+import { useSelector } from "react-redux";
+import { CovidItem } from './CovidItem'
 import styled from "styled-components";
-import { setToLocalStorage } from "./utils/helpers/localStorage";
-import { useDispatch, useSelector } from "react-redux";
-import { statActions } from "./store/statSlice";
-
 
 export const CovidList = () => {
-  const dispatch = useDispatch()
-  const {allCountries} = useSelector(state => state.stat)
-  const {selectedCountry} = useSelector(state => state.stat)
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { selectedCountry } = useSelector((state) => state.stat);
 
-
-
-  const fetchDataHandler = (country) => {
-    setIsLoading(true);
-
-    try {
-      const fetchSelectedCountryData = async () => {
-        const response = await fetch(
-          `https://api.covid19api.com/total/dayone/country/${country}?limit=5`
-        );
-        if (response.ok) {
-          setIsLoading(false);
-        } else {
-          throw new Error("Something went wrong");
-        }
-        const selectedCountryData = await response.json();
-        const lastFiveDays = selectedCountryData.slice(-5)
-        setToLocalStorage('selectedCountry',lastFiveDays);
-        dispatch(statActions.showSelectedCountry(lastFiveDays))
-      };
-      fetchSelectedCountryData();
-      
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
+  const maxRecoveries =
+    selectedCountry.length !== 0 &&
+    selectedCountry.reduce((acc, curr) =>
+      acc.Recovered > curr.Recovered ? acc : curr
+    );
+  const newActive = selectedCountry[4]?.Confirmed - selectedCountry[3]?.Confirmed;
+  console.log(newActive, "New Active");
+  console.log(maxRecoveries);
   
+  const day = new Date(maxRecoveries.Date).toLocaleString('en-Us', {day: '2-digit'}) ;
+  const month = new Date(maxRecoveries.Date).toLocaleString('en-US', {month: 'long'}) ;
   return (
-    <MainContainer>
-      <form>
-        <StyledSelect onClick={(e) => fetchDataHandler(e.target.value)} defaultValue="Kyrgyzstan" >
-          <option>{selectedCountry[0]?.Country || 'Select country'}</option>
-          {allCountries.map((country) => (
-            <option key={country.Slug} value={country.Country} selected="Kyrgyzstan">
-              {country.Country}
-            </option>
-           
-          ))}
-          
-        </StyledSelect>
-        <div>
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <CovidItem  />
-          )}
-          {error}
-        </div>
-      </form>
-    </MainContainer>
+    <StyledSection>
+      <div>
+        {selectedCountry.map((country) => (
+         <CovidItem key={country.Date} date={country.Date} active={country.Active}
+         deaths={country.Deaths} confirmed={country.Confirmed} recovered={country.Recovered}  /> 
+        ))}
+      </div>
+
+      <RecoveredContainer>
+        <p>Top recovered cases</p>
+        <b>{maxRecoveries.Recovered}</b> <br />
+        <span>{day}</span> <span>{month}</span>
+        <hr/>
+        <p>New cases of COVID19</p>
+        <b>{newActive}</b>
+      </RecoveredContainer>
+    </StyledSection>
   );
 };
 
-const MainContainer = styled.div`
-  width: 1400px;
-  margin: 0 auto;
-`
-const StyledSelect = styled.select`
-  width: 360px;
-  height: 61px;
-  font-size: 22px;
-  font-family: Roboto;
-  font-weight: 500;
-  background: #ffffff;
+const StyledSection = styled.section`
+  width: 100%;
+  margin: 2rem auto;
+  display: flex;
+  gap: 1rem;
+`;
+
+const RecoveredContainer = styled.div`
+  width: 380px;
+  height: 450px;
+  background: #1bbc9b;
   border-radius: 5px;
+  margin: 1rem;
+  p, span {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 33px;
+    color: #ffffff;
+  }
+  b {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 100px;
+    line-height: 117px;
+    color: #ffffff;
+  }
 `;
