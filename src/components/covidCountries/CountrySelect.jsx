@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Spinner } from "./components/UI/Spinner/Spinner";
+import { Spinner } from "../UI/Spinner/Spinner";
 import { CovidList } from "./CovidList";
 import styled from "styled-components";
-import { setToLocalStorage } from "./utils/helpers/localStorage";
+import { setToLocalStorage } from "../../utils/helpers/localStorage";
 import { useDispatch, useSelector } from "react-redux";
-import { statActions } from "./store/statSlice";
-import { API_SELECTED_COUNTRY } from "./utils/constants/general";
+import { statActions } from "../../store/statSlice";
+import { API_SELECTED_COUNTRY } from "../../utils/constants/general";
 
 export const CountrySelect = () => {
   const dispatch = useDispatch();

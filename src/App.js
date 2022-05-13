@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { CountrySelect } from "./CountrySelect";
+import { CountrySelect } from "./components/covidCountries/CountrySelect";
 import { Spinner } from "./components/UI/Spinner/Spinner";
 import { setToLocalStorage } from "./utils/helpers/localStorage";
 import { useDispatch } from "react-redux";
