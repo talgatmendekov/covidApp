@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "../UI/Spinner/Spinner";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { CovidList } from "./CovidList";
 import styled from "styled-components";
 import { setToLocalStorage } from "../../utils/helpers/localStorage";
@@ -7,21 +12,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { statActions } from "../../store/statSlice";
 import { API_SELECTED_COUNTRY } from "../../utils/constants/general";
 
+let defaultSearchValue = "Kyrgyzstan";
+
 export const CountrySelect = () => {
   const dispatch = useDispatch();
   const { allCountries } = useSelector((state) => state.stat);
   const { selectedCountry } = useSelector((state) => state.stat);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    defaultSearchValue = searchParams.get("search") || defaultSearchValue;
+  }, [searchParams]);
+
+  const navigate = useNavigate();
 
   const fetchDataHandler = (country) => {
     setIsLoading(true);
 
     try {
       const fetchSelectedCountryData = async () => {
-        const response = await fetch(
-          `${API_SELECTED_COUNTRY}/${country}`
-        );
+        const response = await fetch(`${API_SELECTED_COUNTRY}/${country}`);
+
+        const searchParams = { search: country };
+        navigate({ search: `?${createSearchParams(searchParams)}` });
         if (response.ok) {
           setIsLoading(false);
         } else {
@@ -43,14 +58,14 @@ export const CountrySelect = () => {
       <form>
         <StyledSelect
           onChange={(e) => fetchDataHandler(e.target.value)}
-          defaultValue="Kyrgyzstan"
+          defaultValue={defaultSearchValue}
         >
           <option>{selectedCountry[0]?.Country || "Select country"}</option>
           {allCountries.map((country) => (
             <option
               key={country.Slug}
               value={country.Country}
-              selected="Kyrgyzstan"
+              selected={defaultSearchValue === country.Country}
             >
               {country.Country}
             </option>
