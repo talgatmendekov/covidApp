@@ -42,7 +42,7 @@ export const CountrySelect = () => {
     <MainContainer>
       <form>
         <StyledSelect
-          onClick={(e) => fetchDataHandler(e.target.value)}
+          onChange={(e) => fetchDataHandler(e.target.value)}
           defaultValue="Kyrgyzstan"
         >
           <option>{selectedCountry[0]?.Country || "Select country"}</option>

@@ -12,11 +12,10 @@ export const CovidList = () => {
       acc.Recovered > curr.Recovered ? acc : curr
     );
   const newActive = selectedCountry[4]?.Confirmed - selectedCountry[3]?.Confirmed;
-  console.log(newActive, "New Active");
-  console.log(maxRecoveries);
-  
+
   const day = new Date(maxRecoveries.Date).toLocaleString('en-Us', {day: '2-digit'}) ;
   const month = new Date(maxRecoveries.Date).toLocaleString('en-US', {month: 'long'}) ;
+  
   return (
     <StyledSection>
       <div>
